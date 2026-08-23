@@ -3,6 +3,7 @@ import { BinsDataProvider } from "./context/BinsDataContext";
 import Navbar from "./components/Navbar";
 import MonitoringDashboard from "./pages/MonitoringDashboard";
 import { theme } from "./theme";
+import ManagementDashboard from "./pages/ManagementDashboard";
 
 function App() {
   return (
@@ -11,21 +12,7 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<MonitoringDashboard />} />
-          <Route
-            path="/management"
-            element={
-              <div
-                style={{
-                  padding: theme.spacing.xl,
-                  color: theme.colors.textMuted,
-                  fontFamily: theme.fontFamily,
-                }}
-              >
-                <h2 style={{ color: theme.colors.text }}>Management Dashboard</h2>
-                <p>Coming soon — Member 2 module</p>
-              </div>
-            }
-          />
+          <Route path="/management" element={<ManagementDashboard />} />
         </Routes>
       </BrowserRouter>
     </BinsDataProvider>
