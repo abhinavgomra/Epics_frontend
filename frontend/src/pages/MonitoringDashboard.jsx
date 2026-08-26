@@ -1,9 +1,10 @@
-import { useState, useMemo } from "react";
-import { theme } from "../theme";
+import { useState, useMemo, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useBinsDataContext } from "../context/BinsDataContext";
 import { filterBins, sortBinsByUrgency } from "../utils/binStats";
 import { CAMPUS_BLOCKS, BIN_TYPES } from "../constants/bins";
 import { LoadingState, ErrorState } from "../components/Feedback";
+import PageHeader from "../components/PageHeader";
 import StatsBar from "../components/StatsBar";
 import BinMap from "../components/BinMap";
 import BinCard from "../components/BinCard";
@@ -24,10 +25,25 @@ function formatLastUpdated(date) {
 export default function MonitoringDashboard() {
   const { bins, loading, error, lastUpdated, refetch, addBin } =
     useBinsDataContext();
+  const [searchParams] = useSearchParams();
   const [blockFilter, setBlockFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
   const [selectedBinId, setSelectedBinId] = useState(null);
   const [showAddForm, setShowAddForm] = useState(false);
+
+  useEffect(() => {
+    const binId = searchParams.get("bin");
+    if (!binId || bins.length === 0) return;
+    if (!bins.some((b) => b.id === binId)) return;
+
+    setSelectedBinId(binId);
+    const timer = setTimeout(() => {
+      document
+        .getElementById(`bin-card-${binId}`)
+        ?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [searchParams, bins]);
 
   const displayedBins = useMemo(
     () =>
@@ -56,47 +72,28 @@ export default function MonitoringDashboard() {
   if (error) return <ErrorState message={error} onRetry={refetch} />;
 
   return (
-    <div
-      className="dashboard-page"
-      style={{
-        background: theme.colors.background,
-        minHeight: "calc(100vh - 52px)",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "space-between",
-          alignItems: "flex-start",
-          gap: theme.spacing.md,
-          marginBottom: theme.spacing.xl,
-        }}
-      >
-        <div>
-          <h2 style={{ margin: `0 0 ${theme.spacing.xs}`, fontSize: "1.75rem" }}>
-            Waste Bin Monitoring
-          </h2>
-          <p style={{ color: theme.colors.textMuted, fontSize: "0.95rem" }}>
-            Live fill levels across campus blocks
-          </p>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: theme.spacing.md }}>
-          {lastUpdated && (
-            <div className="live-badge">
-              <span className="live-dot" aria-hidden="true" />
-              Last updated: {formatLastUpdated(lastUpdated)}
-            </div>
-          )}
-          <button
-            type="button"
-            className="btn-primary"
-            onClick={() => setShowAddForm((v) => !v)}
-          >
-            {showAddForm ? "Close Form" : "+ Add Dustbin"}
-          </button>
-        </div>
-      </div>
+    <div className="dashboard-page">
+      <PageHeader
+        title="Waste Bin Monitoring"
+        subtitle="Live fill levels across campus blocks — updated every few seconds"
+        actions={
+          <>
+            {lastUpdated && (
+              <div className="live-badge">
+                <span className="live-dot" aria-hidden="true" />
+                Last updated: {formatLastUpdated(lastUpdated)}
+              </div>
+            )}
+            <button
+              type="button"
+              className="btn-primary"
+              onClick={() => setShowAddForm((v) => !v)}
+            >
+              {showAddForm ? "Close Form" : "+ Add Dustbin"}
+            </button>
+          </>
+        }
+      />
 
       {showAddForm && (
         <AddBinForm onSubmit={addBin} onCancel={handleBinAdded} />
@@ -131,45 +128,29 @@ export default function MonitoringDashboard() {
             ))}
           </select>
         </label>
-        <span style={{ fontSize: "0.85rem", color: theme.colors.textMuted }}>
+        <span className="filter-card__meta">
           Showing {displayedBins.length} of {bins.length} bins
         </span>
       </div>
 
-      <section style={{ marginBottom: theme.spacing.xxl }}>
-        <BinMap
-          bins={displayedBins}
-          selectedBinId={selectedBinId}
-          onSelectBin={handleSelectBin}
-        />
-      </section>
+      <BinMap
+        bins={displayedBins}
+        selectedBinId={selectedBinId}
+        onSelectBin={handleSelectBin}
+      />
 
       <section>
-        <h3 style={{ margin: `0 0 ${theme.spacing.md}`, fontSize: "1.1rem" }}>
+        <h3 className="section-title">
           All Bins
-          <span
-            style={{
-              fontSize: "0.85rem",
-              fontWeight: 400,
-              color: theme.colors.textMuted,
-              marginLeft: theme.spacing.sm,
-            }}
-          >
-            sorted by urgency
-          </span>
+          <span className="section-title__hint">sorted by urgency</span>
         </h3>
         {displayedBins.length === 0 ? (
-          <p style={{ color: theme.colors.textMuted }}>
-            No bins match the current filters.
-          </p>
+          <div className="empty-state">
+            <div className="empty-state__icon" aria-hidden="true">🔍</div>
+            <p className="empty-state__text">No bins match the current filters.</p>
+          </div>
         ) : (
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))",
-              gap: theme.spacing.md,
-            }}
-          >
+          <div className="bin-grid">
             {displayedBins.map((bin) => (
               <BinCard
                 key={bin.id}

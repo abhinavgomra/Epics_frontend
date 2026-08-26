@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { theme } from "../theme";
 import { CAMPUS_BLOCKS, BIN_TYPES } from "../constants/bins";
 
 const EMPTY_FORM = {
@@ -43,9 +42,7 @@ export default function AddBinForm({ onSubmit, onCancel }) {
 
   return (
     <form className="add-bin-form" onSubmit={handleSubmit}>
-      <h3 style={{ margin: `0 0 ${theme.spacing.md}`, color: theme.colors.text }}>
-        Add New Dustbin
-      </h3>
+      <h3 className="panel__title">Add New Dustbin</h3>
 
       <div className="add-bin-form__grid">
         <label>

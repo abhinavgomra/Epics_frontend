@@ -64,5 +64,14 @@ export function useBinsData() {
     };
   }, [loading, error, bins.length]);
 
-  return { bins, loading, error, lastUpdated, refetch: fetchBins, addBin };
+  return {
+    bins,
+    setBins,
+    loading,
+    error,
+    lastUpdated,
+    setLastUpdated,
+    refetch: fetchBins,
+    addBin,
+  };
 }

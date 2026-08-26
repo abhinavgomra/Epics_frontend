@@ -1,70 +1,31 @@
-import { theme, getStatusColor } from "../theme";
+import { getStatusColor } from "../theme";
+import { useTheme } from "../context/ThemeContext";
 import { CAMPUS_BLOCKS } from "../constants/bins";
+import DustbinIcon from "./DustbinIcon";
 
 export default function BinMap({ bins, selectedBinId, onSelectBin }) {
+  const { theme } = useTheme();
+
   const binsByBlock = CAMPUS_BLOCKS.map((block) => ({
     block,
     bins: bins.filter((bin) => bin.block === block),
   }));
 
   return (
-    <div style={{ textAlign: "left" }}>
-      <h3
-        style={{
-          margin: `0 0 ${theme.spacing.md}`,
-          fontSize: "1.1rem",
-          color: theme.colors.text,
-        }}
-      >
-        Campus Bin Map
-      </h3>
+    <div className="map-section">
+      <h3 className="section-title">Campus Bin Map</h3>
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-          gap: theme.spacing.md,
-        }}
-      >
+      <div className="map-grid">
         {binsByBlock.map(({ block, bins: blockBins }) => (
-          <div
-            key={block}
-            style={{
-              background: theme.colors.background,
-              border: `1px solid ${theme.colors.border}`,
-              borderRadius: theme.borderRadius.md,
-              padding: theme.spacing.md,
-              boxShadow: theme.shadow.sm,
-            }}
-          >
-            <p
-              style={{
-                margin: `0 0 ${theme.spacing.sm}`,
-                fontWeight: 600,
-                fontSize: "0.9rem",
-                color: theme.colors.text,
-              }}
-            >
-              {block}
-            </p>
+          <div key={block} className="map-block">
+            <p className="map-block__title">{block}</p>
 
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fill, minmax(64px, 1fr))",
-                gap: theme.spacing.sm,
-                minHeight: "100px",
-                alignContent: "center",
-              }}
-            >
+            <div className="map-block__tiles">
               {blockBins.length === 0 ? (
-                <p style={{ fontSize: "0.8rem", color: theme.colors.textMuted, gridColumn: "1 / -1" }}>
-                  No bins in this block
-                </p>
+                <p className="map-block__empty">No bins in this block</p>
               ) : (
                 blockBins.map((bin) => {
-                  const color = getStatusColor(bin.fillLevel);
-                  const isCritical = bin.fillLevel > 80;
+                  const color = getStatusColor(bin.fillLevel, theme.colors);
                   const isSelected = selectedBinId === bin.id;
 
                   return (
@@ -75,29 +36,15 @@ export default function BinMap({ bins, selectedBinId, onSelectBin }) {
                       title={`${bin.id} — ${bin.location} — ${bin.fillLevel}% (${bin.type})`}
                       aria-label={`${bin.id} at ${bin.location}, ${bin.fillLevel}% full`}
                       onClick={() => onSelectBin?.(bin.id)}
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        gap: "0.35rem",
-                      }}
+                      style={{ "--tile-accent": color }}
                     >
-                      <div
-                        className={`map-tile__dot${isCritical ? " map-tile__dot--critical" : ""}`}
-                        style={{
-                          background: color,
-                          boxShadow: `0 2px 6px ${color}55`,
-                        }}
+                      <DustbinIcon
+                        fillLevel={bin.fillLevel}
+                        size={44}
+                        animated
+                        className="map-tile__dustbin"
                       />
-                      <span
-                        style={{
-                          fontSize: "0.7rem",
-                          color: theme.colors.textMuted,
-                          fontWeight: 500,
-                        }}
-                      >
-                        {bin.id}
-                      </span>
+                      <span className="map-tile__label">{bin.id}</span>
                     </button>
                   );
                 })
@@ -107,32 +54,14 @@ export default function BinMap({ bins, selectedBinId, onSelectBin }) {
         ))}
       </div>
 
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: theme.spacing.lg,
-          marginTop: theme.spacing.md,
-          fontSize: "0.8rem",
-          color: theme.colors.textMuted,
-        }}
-      >
+      <div className="map-legend">
         {[
-          { label: "OK (<50%)", color: theme.colors.status.ok },
-          { label: "Warning (50–80%)", color: theme.colors.status.warning },
-          { label: "Critical (>80%)", color: theme.colors.status.critical },
+          { label: "OK (<50%)", color: "var(--color-status-ok)" },
+          { label: "Warning (50–80%)", color: "var(--color-status-warning)" },
+          { label: "Critical (>80%)", color: "var(--color-status-critical)" },
         ].map(({ label, color }) => (
-          <span key={label}>
-            <span
-              style={{
-                display: "inline-block",
-                width: 10,
-                height: 10,
-                borderRadius: "50%",
-                background: color,
-                marginRight: 6,
-              }}
-            />
+          <span key={label} className="map-legend__item">
+            <span className="map-legend__dot" style={{ background: color }} />
             {label}
           </span>
         ))}

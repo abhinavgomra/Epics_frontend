@@ -48,3 +48,15 @@ export async function addBin({ block, location, type, fillLevel = 0 }) {
   store.push(bin);
   return { ...bin };
 }
+
+export async function emptyBin(binId) {
+  await delay();
+
+  const store = initStore();
+  const bin = store.find((b) => b.id === binId);
+  if (!bin) throw new Error(`Bin ${binId} not found`);
+
+  bin.fillLevel = 0;
+  bin.lastEmptied = new Date().toISOString().slice(0, 10);
+  return { ...bin };
+}

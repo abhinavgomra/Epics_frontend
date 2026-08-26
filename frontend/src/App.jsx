@@ -1,21 +1,33 @@
+import { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { BinsDataProvider } from "./context/BinsDataContext";
+import { ThemeProvider } from "./context/ThemeContext";
+import { AppDataProvider } from "./context/AppDataContext";
 import Navbar from "./components/Navbar";
 import MonitoringDashboard from "./pages/MonitoringDashboard";
-import { theme } from "./theme";
-import ManagementDashboard from "./pages/ManagementDashboard";
+import { LoadingState } from "./components/Feedback";
+
+const ManagementDashboard = lazy(() => import("./pages/ManagementDashboard"));
 
 function App() {
   return (
-    <BinsDataProvider>
-      <BrowserRouter>
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<MonitoringDashboard />} />
-          <Route path="/management" element={<ManagementDashboard />} />
-        </Routes>
-      </BrowserRouter>
-    </BinsDataProvider>
+    <ThemeProvider>
+      <AppDataProvider>
+        <BrowserRouter>
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<MonitoringDashboard />} />
+            <Route
+              path="/management"
+              element={
+                <Suspense fallback={<LoadingState />}>
+                  <ManagementDashboard />
+                </Suspense>
+              }
+            />
+          </Routes>
+        </BrowserRouter>
+      </AppDataProvider>
+    </ThemeProvider>
   );
 }
 
