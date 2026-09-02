@@ -173,4 +173,7 @@ cd backend
 npm install
 npm run dev
 ```
+The backend will run at:
+
+`http://localhost:5000`
 ````
