@@ -43,6 +43,8 @@ const createReading = (req, res) => {
   };
 
   readings.push(newReading);
+  
+  bin.fillLevel = fillLevel;
 
   res.status(201).json(newReading);
 };

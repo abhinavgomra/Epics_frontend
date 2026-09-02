@@ -1,0 +1,115 @@
+// For now, this file will hold fake collection records.
+// Later, MongoDB will store the real collection history.
+
+const collections = [
+  {
+    id: "C1",
+    binId: "B1",
+    block: "Block A",
+    collectedAt: "2026-08-21T09:30:00",
+    weightKg: 12.5,
+    type: "wet",
+    status: "completed"
+  },
+  {
+    id: "C2",
+    binId: "B2",
+    block: "Block A",
+    collectedAt: "2026-08-21T10:15:00",
+    weightKg: 8.2,
+    type: "dry",
+    status: "completed"
+  },
+  {
+    id: "C3",
+    binId: "B3",
+    block: "Block A",
+    collectedAt: "2026-08-21T11:00:00",
+    weightKg: 5.4,
+    type: "recyclable",
+    status: "completed"
+  },
+  {
+    id: "C4",
+    binId: "B4",
+    block: "Block B",
+    collectedAt: "2026-08-21T09:45:00",
+    weightKg: 14.1,
+    type: "wet",
+    status: "missed"
+  },
+  {
+    id: "C5",
+    binId: "B5",
+    block: "Block B",
+    collectedAt: "2026-08-21T10:30:00",
+    weightKg: 9.8,
+    type: "dry",
+    status: "completed"
+  },
+  {
+    id: "C6",
+    binId: "B6",
+    block: "Block B",
+    collectedAt: "2026-08-22T09:20:00",
+    weightKg: 6.7,
+    type: "recyclable",
+    status: "pending"
+  },
+  {
+    id: "C7",
+    binId: "B7",
+    block: "Block C",
+    collectedAt: "2026-08-22T10:00:00",
+    weightKg: 11.3,
+    type: "wet",
+    status: "completed"
+  },
+  {
+    id: "C8",
+    binId: "B8",
+    block: "Block C",
+    collectedAt: "2026-08-22T10:45:00",
+    weightKg: 7.9,
+    type: "dry",
+    status: "completed"
+  },
+  {
+    id: "C9",
+    binId: "B9",
+    block: "Block C",
+    collectedAt: "2026-08-22T11:30:00",
+    weightKg: 4.2,
+    type: "recyclable",
+    status: "missed"
+  },
+  {
+    id: "C10",
+    binId: "B1",
+    block: "Block A",
+    collectedAt: "2026-08-22T14:00:00",
+    weightKg: 13.6,
+    type: "wet",
+    status: "completed"
+  },
+  {
+    id: "C11",
+    binId: "B4",
+    block: "Block B",
+    collectedAt: "2026-08-23T09:15:00",
+    weightKg: 10.5,
+    type: "wet",
+    status: "pending"
+  },
+  {
+    id: "C12",
+    binId: "B7",
+    block: "Block C",
+    collectedAt: "2026-08-23T10:00:00",
+    weightKg: 8.8,
+    type: "dry",
+    status: "completed"
+  }
+];
+
+module.exports = collections;
