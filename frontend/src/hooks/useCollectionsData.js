@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
-import { getCollections, addCollection as addCollectionService } from "../services/collectionService";
-import { emptyBin as emptyBinService } from "../services/binService";
+import {
+  getCollections,
+  addCollection as addCollectionService,
+} from "../services/collectionService";
 
 export function useCollectionsData({ bins = [], updateBinInState } = {}) {
   const [collections, setCollections] = useState([]);
@@ -10,6 +12,7 @@ export function useCollectionsData({ bins = [], updateBinInState } = {}) {
   const fetchCollections = useCallback(async () => {
     setLoading(true);
     setError(null);
+
     try {
       const data = await getCollections();
       setCollections(data);
@@ -33,22 +36,37 @@ export function useCollectionsData({ bins = [], updateBinInState } = {}) {
   const markBinCollected = useCallback(
     async (binId) => {
       const bin = bins.find((b) => b.id === binId);
-      if (!bin) throw new Error(`Bin ${binId} not found`);
 
-      const weightKg = Math.round((bin.fillLevel / 100) * 15 * 10) / 10;
-      const updatedBin = await emptyBinService(binId);
-      updateBinInState?.(updatedBin);
+      if (!bin) {
+        throw new Error(`Bin ${binId} not found`);
+      }
+
+      const weightKg =
+        Math.round((bin.fillLevel / 100) * 15 * 10) / 10;
 
       const entry = await addCollectionService({
         binId: bin.id,
-        block: bin.block,
         type: bin.type,
         weightKg: weightKg || 1,
         status: "completed",
       });
 
       setCollections((prev) => [...prev, entry]);
-      return { bin: updatedBin, collection: entry };
+
+      updateBinInState?.({
+        ...bin,
+        fillLevel: 0,
+        lastEmptied: entry.collectedAt,
+      });
+
+      return {
+        bin: {
+          ...bin,
+          fillLevel: 0,
+          lastEmptied: entry.collectedAt,
+        },
+        collection: entry,
+      };
     },
     [bins, updateBinInState],
   );

@@ -9,6 +9,8 @@ import StatsBar from "../components/StatsBar";
 import BinMap from "../components/BinMap";
 import BinCard from "../components/BinCard";
 import AddBinForm from "../components/AddBinForm";
+import BinReadings from "../components/BinReadings";
+
 
 const BLOCKS = ["all", ...CAMPUS_BLOCKS];
 const TYPES = ["all", ...BIN_TYPES];
@@ -138,6 +140,8 @@ export default function MonitoringDashboard() {
         selectedBinId={selectedBinId}
         onSelectBin={handleSelectBin}
       />
+
+      <BinReadings binId={selectedBinId} />
 
       <section>
         <h3 className="section-title">
