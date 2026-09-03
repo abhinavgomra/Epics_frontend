@@ -40,13 +40,21 @@ const createReading = async (req, res) => {
       });
     }
 
-    const lastReading = await Reading.findOne().sort({ id: -1 });
+    const allReadings = await Reading.find();
 
     let nextReadingNumber = 1;
 
-    if (lastReading) {
-      nextReadingNumber =
-        Number.parseInt(lastReading.id.slice(1), 10) + 1;
+    if (allReadings.length > 0) {
+      const highestReadingNumber = allReadings.reduce(
+        (max, reading) => {
+          const number = Number.parseInt(reading.id.slice(1), 10);
+
+          return Number.isNaN(number) ? max : Math.max(max, number);
+        },
+        0
+      );
+
+      nextReadingNumber = highestReadingNumber + 1;
     }
 
     const newReading = await Reading.create({

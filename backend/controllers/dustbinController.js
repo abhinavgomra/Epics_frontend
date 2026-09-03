@@ -31,15 +31,7 @@ const getBinById = async (req, res) => {
   }
 };
 
-const getNextBinId = () => {
-  const maxId = bins.reduce((max, bin) => {
-    const number = Number.parseInt(bin.id.slice(1), 10);
 
-    return Number.isNaN(number) ? max : Math.max(max, number);
-  }, 0);
-
-  return `B${maxId + 1}`;
-};
 
 const createBin = async (req, res) => {
   try {
