@@ -1,5 +1,7 @@
 const express = require("express");
 const cors = require("cors");
+const mongoose = require("mongoose");
+require("dotenv").config();
 
 
 const dustbinRoutes = require("./routes/dustbinRoutes");
@@ -9,6 +11,15 @@ const dashboardRoutes = require("./routes/dashboardRoutes");
 
 const app = express();
 const PORT = 5000;
+
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => {
+    console.log("MongoDB connected successfully");
+  })
+  .catch((error) => {
+    console.error("MongoDB connection failed:", error.message);
+  });
 
 app.use(cors());
 app.use(express.json());

@@ -1,52 +1,78 @@
 
-const readings = require("../data/readings");
-const bins = require("../data/bins");
+const Reading = require("../models/Reading");
+const Dustbin = require("../models/Dustbin");
 
-const getReadingsByBinId = (req, res) => {
-  const binReadings = readings.filter(
-    (reading) => reading.binId === req.params.id
-  );
+const getReadingsByBinId = async (req, res) => {
+  try {
+    const binReadings = await Reading.find({
+      binId: req.params.id
+    }).sort({ timestamp: 1 });
 
-  res.json(binReadings);
+    res.json(binReadings);
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to fetch readings"
+    });
+  }
 };
 
-const createReading = (req, res) => {
-  const { binId, fillLevel } = req.body;
+const createReading = async (req, res) => {
+  try {
+    const { binId, fillLevel } = req.body;
 
-  if (!binId || fillLevel === undefined) {
-    return res.status(400).json({
-      message: "Bin ID and fill level are required"
+    if (!binId || fillLevel === undefined) {
+      return res.status(400).json({
+        message: "Bin ID and fill level are required"
+      });
+    }
+
+    const bin = await Dustbin.findOne({ id: binId });
+
+    if (!bin) {
+      return res.status(404).json({
+        message: "Dustbin not found"
+      });
+    }
+
+    if (fillLevel < 0 || fillLevel > 100) {
+      return res.status(400).json({
+        message: "Fill level must be between 0 and 100"
+      });
+    }
+
+    const allReadings = await Reading.find();
+
+    let nextReadingNumber = 1;
+
+    if (allReadings.length > 0) {
+      const highestReadingNumber = allReadings.reduce(
+        (max, reading) => {
+          const number = Number.parseInt(reading.id.slice(1), 10);
+
+          return Number.isNaN(number) ? max : Math.max(max, number);
+        },
+        0
+      );
+
+      nextReadingNumber = highestReadingNumber + 1;
+    }
+
+    const newReading = await Reading.create({
+      id: `R${nextReadingNumber}`,
+      binId,
+      fillLevel,
+      timestamp: new Date()
+    });
+
+    bin.fillLevel = fillLevel;
+    await bin.save();
+
+    res.status(201).json(newReading);
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to create reading"
     });
   }
-
-  const bin = bins.find((bin) => bin.id === binId);
-
-  if (!bin) {
-    return res.status(404).json({
-      message: "Dustbin not found"
-    });
-  }
-
-  if (fillLevel < 0 || fillLevel > 100) {
-    return res.status(400).json({
-      message: "Fill level must be between 0 and 100"
-    });
-  }
-
-  const nextIdNumber = readings.length + 1;
-
-  const newReading = {
-    id: `R${nextIdNumber}`,
-    binId,
-    fillLevel,
-    timestamp: new Date().toISOString()
-  };
-
-  readings.push(newReading);
-  
-  bin.fillLevel = fillLevel;
-
-  res.status(201).json(newReading);
 };
 
 module.exports = {
