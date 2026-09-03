@@ -46,13 +46,13 @@ Authorities / Waste Collection
 
 - **Node.js** – Provides the runtime environment for the backend.
 - **Express.js** – Used to build the REST APIs and handle HTTP requests.
-- **Mongoose** – Will be used to connect the backend with MongoDB and work with database data.
+- **Mongoose** – Used to connect the backend with MongoDB and work with database data.
 - **CORS** – Allows the frontend and backend to communicate when they are running on different origins.
 - **dotenv** – Used to load environment variables such as database configuration.
 
 ### Database
 
-- **MongoDB** – Will be used to store dustbin information, sensor readings, and waste collection records.
+- **MongoDB** – Used to store dustbin information, sensor readings, and waste collection records.
 
 ### Hardware
 
@@ -84,7 +84,9 @@ backend/
 │   └── dashboardRoutes.js
 │
 ├── models/
-│   └── (MongoDB models will be added here)
+│   ├── Dustbin.js
+│   ├── Reading.js
+│   └── Collection.js
 │
 ├── .env
 ├── .gitignore
@@ -139,12 +141,12 @@ The backend provides REST APIs for managing dustbins, sensor readings, waste col
 - [x] Waste collection management APIs.
 - [x] Dashboard statistics API.
 - [x] API testing using Postman.
+- [x] MongoDB Atlas integration.
+- [x] Mongoose database models.
+- [x] Migration from temporary JavaScript data to MongoDB.
 
 ### In Progress
 
-- [ ] MongoDB integration.
-- [ ] Mongoose database models.
-- [ ] Migration from temporary JavaScript data to MongoDB.
 - [ ] Frontend-backend integration.
 
 ### Planned
@@ -171,8 +173,22 @@ Clone the repository and move into the backend directory:
 ```bash
 cd backend
 npm install
+```
+
+Create a `.env` file inside the `backend` directory and add your MongoDB connection string:
+
+```env
+MONGO_URI=your_mongodb_connection_string
+```
+
+Do not commit the `.env` file to GitHub. It is already included in `.gitignore`.
+
+Start the backend:
+
+```bash
 npm run dev
 ```
+
 The backend will run at:
 
 `http://localhost:5000`
