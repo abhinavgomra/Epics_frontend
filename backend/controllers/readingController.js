@@ -16,6 +16,15 @@ const getReadingsByBinId = async (req, res) => {
   }
 };
 
+const getAllReadings = async (req, res) => {
+  try {
+    const readings = await Reading.find().sort({ timestamp: 1 });
+    res.json(readings);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch readings" });
+  }
+};
+
 const createReading = async (req, res) => {
   try {
     const { binId, fillLevel } = req.body;
@@ -76,6 +85,7 @@ const createReading = async (req, res) => {
 };
 
 module.exports = {
+  getAllReadings,
   getReadingsByBinId,
   createReading
 };

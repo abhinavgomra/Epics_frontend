@@ -129,6 +129,15 @@ The backend provides REST APIs for managing dustbins, sensor readings, waste col
 | ------ | ---------------------- | ---------------------------------------------- |
 | GET    | `/api/dashboard/stats` | Get overall and area-wise dashboard statistics |
 
+### Local ML Pickup Planning API
+
+| Method | Endpoint | Description |
+| ------ | -------- | ----------- |
+| GET | `/api/planning/pickups` | Predict fill growth from local readings and return today's pickup route. |
+| GET | `/api/planning/pickups?area=Block%20A` | Return the pickup route for one area. |
+
+The local model estimates each bin's daily fill rate from its most recent readings. It schedules wet-waste bins for same-day pickup and schedules dry-waste bins when they are at least 80% full, predicted to reach 90% within three days, or have gone three days without emptying. Stops are ordered by urgency for the assigned area.
+
 ## Project Status
 
 ### Completed

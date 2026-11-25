@@ -1,6 +1,7 @@
 import { createContext, useContext, useCallback } from "react";
 import { useBinsData } from "../hooks/useBinsData";
 import { useCollectionsData } from "../hooks/useCollectionsData";
+import { useReadingsData } from "../hooks/useReadingsData";
 
 const AppDataContext = createContext(null);
 
@@ -18,6 +19,7 @@ export function AppDataProvider({ children }) {
     bins: binsData.bins,
     updateBinInState,
   });
+  const readingsData = useReadingsData({ updateBinInState });
 
   const value = {
     ...binsData,
@@ -27,10 +29,11 @@ export function AppDataProvider({ children }) {
     refetchCollections: collectionsData.refetch,
     addCollection: collectionsData.addCollection,
     markBinCollected: collectionsData.markBinCollected,
-    loading: binsData.loading || collectionsData.loading,
-    error: binsData.error || collectionsData.error,
+    ...readingsData,
+    loading: binsData.loading || collectionsData.loading || readingsData.readingsLoading,
+    error: binsData.error || collectionsData.error || readingsData.readingsError,
     refetch: async () => {
-      await Promise.all([binsData.refetch(), collectionsData.refetch()]);
+      await Promise.all([binsData.refetch(), collectionsData.refetch(), readingsData.refetchReadings()]);
     },
   };
 

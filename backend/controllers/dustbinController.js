@@ -35,12 +35,16 @@ const getBinById = async (req, res) => {
 
 const createBin = async (req, res) => {
   try {
-    const { block, location, type, fillLevel = 0 } = req.body;
+    const { block, location, type, fillLevel = 0, latitude, longitude } = req.body;
 
     if (!block || !location || !type) {
       return res.status(400).json({
         message: "Block, location, and type are required"
       });
+    }
+
+    if ((latitude === undefined) !== (longitude === undefined)) {
+      return res.status(400).json({ message: "Latitude and longitude must be provided together" });
     }
 
     const allBins = await Dustbin.find();
@@ -66,7 +70,9 @@ const createBin = async (req, res) => {
       location,
       fillLevel,
       type,
-      lastEmptied: null
+      lastEmptied: null,
+      latitude,
+      longitude
     });
 
     res.status(201).json(newBin);
@@ -130,5 +136,4 @@ module.exports = {
   createBin,
   updateBin,
   getBinsByArea
-};      
-    
+};

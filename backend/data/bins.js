@@ -1,5 +1,6 @@
 
-//temporary data for bins, to be replaced with database in future
+// Demo data. Dates are generated relative to today so the pickup plan stays usable.
+const daysAgo = (days) => new Date(Date.now() - days * 24 * 60 * 60 * 1000);
 
 const bins = [
   {
@@ -8,7 +9,7 @@ const bins = [
     location: "Canteen",
     fillLevel: 92,
     type: "wet",
-    lastEmptied: "2026-08-18"
+    lastEmptied: daysAgo(1.2)
   },
   {
     id: "B2",
@@ -16,7 +17,7 @@ const bins = [
     location: "Canteen",
     fillLevel: 67,
     type: "dry",
-    lastEmptied: "2026-08-20"
+    lastEmptied: daysAgo(3.2)
   },
   {
     id: "B3",
@@ -24,7 +25,7 @@ const bins = [
     location: "Library Corridor",
     fillLevel: 34,
     type: "recyclable",
-    lastEmptied: "2026-08-21"
+    lastEmptied: daysAgo(0.5)
   },
   {
     id: "B4",
@@ -32,7 +33,7 @@ const bins = [
     location: "Lab Wing",
     fillLevel: 88,
     type: "wet",
-    lastEmptied: "2026-08-17"
+    lastEmptied: daysAgo(1.1)
   },
   {
     id: "B5",
@@ -40,7 +41,7 @@ const bins = [
     location: "Parking Area",
     fillLevel: 55,
     type: "dry",
-    lastEmptied: "2026-08-19"
+    lastEmptied: daysAgo(2)
   },
   {
     id: "B6",
@@ -48,7 +49,7 @@ const bins = [
     location: "Sports Complex",
     fillLevel: 22,
     type: "recyclable",
-    lastEmptied: "2026-08-21"
+    lastEmptied: daysAgo(0.7)
   },
   {
     id: "B7",
@@ -56,7 +57,7 @@ const bins = [
     location: "Admin Building",
     fillLevel: 95,
     type: "wet",
-    lastEmptied: "2026-08-16"
+    lastEmptied: daysAgo(1.3)
   },
   {
     id: "B8",
@@ -64,7 +65,7 @@ const bins = [
     location: "Hostel Block",
     fillLevel: 48,
     type: "dry",
-    lastEmptied: "2026-08-20"
+    lastEmptied: daysAgo(1.2)
   },
   {
     id: "B9",
@@ -72,7 +73,7 @@ const bins = [
     location: "Auditorium",
     fillLevel: 73,
     type: "recyclable",
-    lastEmptied: "2026-08-19"
+    lastEmptied: daysAgo(2.5)
   }
 ];
 
