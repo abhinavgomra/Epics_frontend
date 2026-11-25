@@ -1,7 +1,5 @@
 import collectionsData from "../data/collections.json";
 
-const DELAY_MS = 300;
-
 let collectionsStore = null;
 
 function initStore() {
@@ -19,7 +17,7 @@ function nextCollectionId(store) {
   return `C${max + 1}`;
 }
 
-function delay(ms = DELAY_MS) {
+function delay(ms = 300) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 

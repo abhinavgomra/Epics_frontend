@@ -7,6 +7,9 @@ import MonitoringDashboard from "./pages/MonitoringDashboard";
 import { LoadingState } from "./components/Feedback";
 
 const ManagementDashboard = lazy(() => import("./pages/ManagementDashboard"));
+const PickupPlan = lazy(() => import("./pages/PickupPlan"));
+const WorkerDashboard = lazy(() => import("./pages/WorkerDashboard"));
+const ReadingsDashboard = lazy(() => import("./pages/ReadingsDashboard"));
 
 function App() {
   return (
@@ -21,6 +24,30 @@ function App() {
               element={
                 <Suspense fallback={<LoadingState />}>
                   <ManagementDashboard />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/pickup-plan"
+              element={
+                <Suspense fallback={<LoadingState />}>
+                  <PickupPlan />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/worker"
+              element={
+                <Suspense fallback={<LoadingState />}>
+                  <WorkerDashboard />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/readings"
+              element={
+                <Suspense fallback={<LoadingState />}>
+                  <ReadingsDashboard />
                 </Suspense>
               }
             />
